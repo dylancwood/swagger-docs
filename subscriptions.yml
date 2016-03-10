@@ -1,0 +1,76 @@
+---
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Subscriptions API
+definitions:
+  responseObj:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          subscriberid:
+            type: string
+          expirydate:
+            type: date
+          autorenew:
+            type: boolean
+      apiVersion:
+        type: string
+      meta:
+        type: object
+  errorObj:
+    type: object
+    properties:
+      error:
+        type: object
+        properties:
+          code:
+            type: number
+          title:
+            type: string
+          message:
+            type: string
+          reason:
+            type: string
+      apiVersion:
+        type: string
+      meta:
+        type: object
+paths:
+  /subscriptions/{subscriberid}:
+    put:
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/responseObj"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/errorObj"
+        404:
+          description: Unknown subscriberid or subscriberid does not belong to customer
+          schema:
+            $ref: "#/definitions/errorObj"
+        500:
+          description: Internal server error
+          schema:
+            $ref: "#/definitions/errorObj"
+      parameters:
+        - name: subscriberid
+          in: path
+          description: subscriber ID
+          required: true
+          type: string
+          minLength: 36
+          maxLength: 36
+        - name: autorenew
+          in: body
+          description: new state of autorenew
+          required: true
+          schema:
+            type: boolean
+
+
